@@ -15,8 +15,6 @@ QtDialog::QtDialog(QWidget *parent) :
   ui->setupUi(this);
   assert(this->layout());
   this->layout()->addWidget(m_svg);
-  //m_svg->setMinimumSize(QSize(200,200));
-
 }
 
 QtDialog::~QtDialog()
@@ -29,12 +27,16 @@ void QtDialog::on_create_clicked()
   const std::string filename{"paper_dna_helix.svg"};
   {
     const paper_dna_helix h(14);
-    std::ofstream f(filename);
-    f << h;
     std::stringstream s;
     s << h;
     qDebug() << s.str().c_str();
+    std::ofstream f(filename);
+    f << h;
   }
-  assert(m_svg->isVisible());
   m_svg->load(QString(filename.c_str()));
+}
+
+void QtDialog::showEvent(QShowEvent *)
+{
+  on_create_clicked();
 }

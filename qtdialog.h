@@ -19,6 +19,7 @@ public:
 
 private slots:
   void on_create_clicked();
+  void showEvent(QShowEvent *);
 
 private:
   Ui::QtDialog *ui;
