@@ -21,13 +21,6 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QLabel" name="svg">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
