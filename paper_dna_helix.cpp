@@ -1,17 +1,18 @@
 #include "paper_dna_helix.h"
 
 #include <cassert>
+#include <cmath>
 #include <iostream>
 
 paper_dna_helix::paper_dna_helix(const int n_nucleotides)
   : m_n_nucleotides{n_nucleotides},
-    m_lines{create_lines(n_nucleotides)}
+    m_lines{create_dna_helix(n_nucleotides)}
 {
   assert(n_nucleotides > 0);
   assert(m_lines.size() < 1000);
 }
 
-std::vector<line> paper_dna_helix::create_lines(const int n_nucleotides)
+std::vector<line> paper_dna_helix::create_dna_helix(const int n_nucleotides)
 {
   assert(n_nucleotides > 0);
   std::vector<line> v;
@@ -33,12 +34,52 @@ std::vector<line> paper_dna_helix::create_lines(const int n_nucleotides)
 
 
     */
-
-    const double
+    lines nucleotide{create_nucleotide()};
+    translate(nucleotide, 0.0, 10.0 * i);
+    std::copy(
+      std::begin(nucleotide),
+      std::end(nucleotide),
+      std::back_inserter(v)
+    );
   }
 
   v.push_back(line(n_nucleotides, n_nucleotides * 2, 100, 200));
   return v;
+}
+
+std::vector<line> paper_dna_helix::create_nucleotide()
+{
+  /*
+      C
+  |  / \
+  | /   \
+  |/     D
+  B     /
+  |\   /
+  | \ /  angle is angle of corner EAD
+  |  A-----------E
+
+
+
+  */
+  const double pi{3.1415};
+  const double hi{pi / 2.0};
+  const double angle{pi * 0.25};
+  const double ax{0.0};
+  const double ay{0.0};
+  const double bx{ax + (1.0 * std::cos( hi + angle))};
+  const double by{ay - (1.0 * std::sin( hi + angle))};
+  const double dx{ax + (2.0 * std::cos(0.0 + angle))};
+  const double dy{ay - (2.0 * std::sin(0.0 + angle))};
+  const double cx{dx + (1.0 * std::cos( hi + angle))};
+  const double cy{dy - (1.0 * std::sin( hi + angle))};
+  return
+  {
+    line(ax, ay, bx, by),
+    line(bx, by, cx, cy),
+    line(cx, cy, dx, dy),
+    line(dx, dy, ax, ay)
+  };
 }
 
 
