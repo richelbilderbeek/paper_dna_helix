@@ -15,6 +15,10 @@ QtDialog::QtDialog(QWidget *parent) :
   ui->setupUi(this);
   assert(this->layout());
   this->layout()->addWidget(m_svg);
+
+  connect(ui->n_nucleotides, SIGNAL(valueChanged(int)), this, SLOT(something_happened()));
+  connect(ui->nucleotide_width, SIGNAL(valueChanged(double)), this, SLOT(something_happened()));
+  connect(ui->left_chain_angle, SIGNAL(valueChanged(int)), this, SLOT(something_happened()));
 }
 
 QtDialog::~QtDialog()
@@ -22,11 +26,15 @@ QtDialog::~QtDialog()
   delete ui;
 }
 
-void QtDialog::on_create_clicked()
+void QtDialog::something_happened()
 {
   const std::string filename{"paper_dna_helix.svg"};
   {
-    const paper_dna_helix h(14);
+    const paper_dna_helix h(
+      static_cast<double>(ui->left_chain_angle->value()) * 6.28 / 360.0,
+      ui->n_nucleotides->value(),
+      ui->nucleotide_width->value()
+    );
     std::stringstream s;
     s << h;
     qDebug() << s.str().c_str();
@@ -38,5 +46,5 @@ void QtDialog::on_create_clicked()
 
 void QtDialog::showEvent(QShowEvent *)
 {
-  on_create_clicked();
+  something_happened();
 }

@@ -18,7 +18,7 @@ public:
   ~QtDialog();
 
 private slots:
-  void on_create_clicked();
+  void something_happened();
   void showEvent(QShowEvent *);
 
 private:
