@@ -10,6 +10,7 @@ paper_dna_helix::paper_dna_helix(
   const double nucleotide_width
 )
   : m_left_chain_angle_rad{left_chain_angle_rad},
+    m_lines{},
     m_n_nucleotides{n_nucleotides},
     m_nucleotide_width{nucleotide_width}
 
@@ -43,7 +44,9 @@ std::vector<line> paper_dna_helix::create_dna_helix() const
 
 
     */
-    lines nucleotide{create_nucleotide()};
+    lines nucleotide{
+      create_nucleotide(dy_heart_heart_distance,m_nucleotide_width,m_left_chain_angle_rad)
+    };
     translate(nucleotide, 20.0, dy_heart_heart_distance * (i + 1));
     std::copy(
       std::begin(nucleotide),
@@ -75,40 +78,46 @@ lines paper_dna_helix::create_frame() const
   };
 }
 
-std::vector<line> paper_dna_helix::create_nucleotide() const
+std::vector<line> create_nucleotide(
+  const double h,
+  const double w,
+  const double angle
+
+)
 {
   /*
-      C
-  |  / \
-  | /   \
-  |/     D
-  B     /
-  |\   /
-  | \ /  angle is angle of corner EAD
-  |  A-----------E
+
+  C---------+
+  |\        |
+  | \       |
+  |  \      |
+  |   \     |
+  |    \    |
+  |     \   |
+h |      \  |
+  |       \ |
+  |        \|
+  |       _-B
+  |   w _-  |
+  |   _-    |
+  | _- angle|
+  A---------+
+       dx
 
 
 
   */
-  const double pi{3.1415};
-  const double hi{pi / 2.0};
-  const double angle{m_left_chain_angle_rad};
-  const double w{m_nucleotide_width};
-  const double h{m_nucleotide_width};
   const double ax{0.0};
   const double ay{0.0};
-  const double bx{ax + (h * std::cos( hi + angle))};
-  const double by{ay - (h * std::sin( hi + angle))};
-  const double dx{ax + (w * std::cos(0.0 + angle))};
-  const double dy{ay - (w * std::sin(0.0 + angle))};
-  const double cx{dx + (h * std::cos( hi + angle))};
-  const double cy{dy - (h * std::sin( hi + angle))};
+  const double bx{ax + (w * std::cos(angle))};
+  const double by{ay - (w * std::sin(angle))};
+  const double cx{ax};
+  const double cy{ay-h};
   return
   {
     line(ax, ay, bx, by),
     line(bx, by, cx, cy),
-    line(cx, cy, dx, dy),
-    line(dx, dy, ax, ay)
+    line(cx, cy, ax, ay)
   };
 }
 

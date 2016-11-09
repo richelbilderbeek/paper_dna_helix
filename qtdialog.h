@@ -11,10 +11,12 @@ struct QSvgWidget;
 
 class QtDialog : public QDialog
 {
-  Q_OBJECT
+  Q_OBJECT //!OCLINT
 
 public:
   explicit QtDialog(QWidget *parent = 0);
+  QtDialog(const QtDialog&) = delete;
+  QtDialog& operator=(const QtDialog&) = delete;
   ~QtDialog();
 
 private slots:

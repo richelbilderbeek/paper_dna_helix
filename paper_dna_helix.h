@@ -36,10 +36,35 @@ private:
 
   lines create_dna_helix() const;
   lines create_frame() const;
-  lines create_nucleotide() const;
 
   friend std::ostream& operator<<(std::ostream& os, const paper_dna_helix& h) noexcept;
 };
+
+  /*
+
+  +---------+
+  |\        |
+  | \       |
+  |  \      |
+  |   \     |
+  |    \    |
+  |     \   |
+h |      \  |
+  |       \ |
+  |        \|
+  |       _-*
+  |   w _-  |
+  |   _-    |
+  | _- angle|
+  +---------+
+
+  */
+  /// Create the lines of a nucleotide connection
+lines create_nucleotide(
+  const double h,
+  const double w,
+  const double angle
+);
 
 
 std::ostream& operator<<(std::ostream& os, const paper_dna_helix& h) noexcept;
