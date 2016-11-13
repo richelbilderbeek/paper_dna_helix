@@ -70,7 +70,7 @@
       <item>
        <widget class="QSlider" name="left_chain_angle">
         <property name="maximum">
-         <number>45</number>
+         <number>89</number>
         </property>
         <property name="value">
          <number>45</number>

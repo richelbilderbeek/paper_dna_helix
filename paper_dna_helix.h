@@ -35,12 +35,16 @@ private:
   const double m_nucleotide_width;
 
   lines create_dna_helix() const;
-  lines create_frame() const;
 
   friend std::ostream& operator<<(std::ostream& os, const paper_dna_helix& h) noexcept;
 };
 
-  /*
+
+
+//Creates the rectangle everything must fit in
+lines create_frame(const double width, const double height);
+
+/*
 
   +---------+
   |\        |
@@ -58,8 +62,8 @@ h |      \  |
   | _- angle|
   +---------+
 
-  */
-  /// Create the lines of a nucleotide connection
+*/
+/// Create the lines of a nucleotide connection
 lines create_nucleotide(
   const double h,
   const double w,

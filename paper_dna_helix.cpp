@@ -25,25 +25,33 @@ std::vector<line> paper_dna_helix::create_dna_helix() const
 {
   assert(m_n_nucleotides > 0);
   const double dy_heart_heart_distance{get_height() / (m_n_nucleotides + 2)};
-  std::vector<line> v = create_frame();
+  std::vector<line> v = create_frame(get_width(), get_height());
+
   //The width of a nucleotide is set to a length of 1 unit
 
   //Create left backbone
   for (int i=0; i!=m_n_nucleotides; ++i)
   {
     /*
-        C
-    |  / \
-    | /   \
-    |/     D
-    B     /
-    |\   /
-    | \ /
-    |  A
 
-
+  +---------+
+  |\        |
+  | \       |
+  |  \      |
+  |   \     |
+  |    \    |
+  |     \   |
+h |      \  |
+  |       \ |
+  |        \|
+  |       _-*
+  |   w _-  |
+  |   _-    |
+  | _- angle|
+  +---------+
 
     */
+
     lines nucleotide{
       create_nucleotide(dy_heart_heart_distance,m_nucleotide_width,m_left_chain_angle_rad)
     };
@@ -57,7 +65,7 @@ std::vector<line> paper_dna_helix::create_dna_helix() const
   return v;
 }
 
-lines paper_dna_helix::create_frame() const
+lines create_frame(const double w, const double h)
 {
   /*
 
@@ -67,8 +75,8 @@ lines paper_dna_helix::create_frame() const
   3----2
 
   */
-  const auto w = get_width();
-  const auto h = get_height();
+  //const auto w = get_width();
+  //const auto h = get_height();
   return
   {
     line(0.0, 0.0,   w, 0.0),
