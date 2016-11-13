@@ -4,12 +4,20 @@
 #include <cmath>
 #include <iostream>
 
+template <class T>
+void append(std::vector<T>& v, const std::vector<T>& w)
+{
+  std::copy(std::begin(w), std::end(w), std::back_inserter(v));
+}
+
 paper_dna_helix::paper_dna_helix(
   const double left_chain_angle_rad,
   const int n_nucleotides,
-  const double nucleotide_width
+  const double nucleotide_width,
+  const double backbone_margin_mm
 )
-  : m_left_chain_angle_rad{left_chain_angle_rad},
+  : m_backbone_margin_mm{backbone_margin_mm},
+    m_left_chain_angle_rad{left_chain_angle_rad},
     m_lines{},
     m_n_nucleotides{n_nucleotides},
     m_nucleotide_width{nucleotide_width}
@@ -24,44 +32,21 @@ paper_dna_helix::paper_dna_helix(
 std::vector<line> paper_dna_helix::create_dna_helix() const
 {
   assert(m_n_nucleotides > 0);
-  const double dy_heart_heart_distance{get_height() / (m_n_nucleotides + 2)};
   std::vector<line> v = create_frame(get_width(), get_height());
 
   //The width of a nucleotide is set to a length of 1 unit
 
   //Create left backbone
-  for (int i=0; i!=m_n_nucleotides; ++i)
-  {
-    /*
-
-  +---------+
-  |\        |
-  | \       |
-  |  \      |
-  |   \     |
-  |    \    |
-  |     \   |
-h |      \  |
-  |       \ |
-  |        \|
-  |       _-*
-  |   w _-  |
-  |   _-    |
-  | _- angle|
-  +---------+
-
-    */
-
-    lines nucleotide{
-      create_nucleotide(dy_heart_heart_distance,m_nucleotide_width,m_left_chain_angle_rad)
-    };
-    translate(nucleotide, 20.0, dy_heart_heart_distance * (i + 1));
-    std::copy(
-      std::begin(nucleotide),
-      std::end(nucleotide),
-      std::back_inserter(v)
-    );
-  }
+  const std::vector<line> nucleotides{
+    create_nucleotides(
+      m_n_nucleotides,
+      get_height(),
+      m_nucleotide_width,
+      m_left_chain_angle_rad,
+      m_backbone_margin_mm
+    )
+  };
+  append(v, nucleotides);
   return v;
 }
 
@@ -75,8 +60,6 @@ lines create_frame(const double w, const double h)
   3----2
 
   */
-  //const auto w = get_width();
-  //const auto h = get_height();
   return
   {
     line(0.0, 0.0,   w, 0.0),
@@ -129,6 +112,62 @@ h |      \  |
   };
 }
 
+lines create_nucleotides(
+  const int n_nucleotides,
+  const double height,
+  const double nucleotide_width,
+  const double left_chain_angle_rad,
+  const double backbone_margin_mm
+)
+{
+  std::vector<line> v;
+  const double dy_heart_heart_distance{height / (n_nucleotides + 2)};
+  for (int i=0; i!=n_nucleotides; ++i)
+  {
+    /*
+
+  +---------+
+  |\        |
+  | \       |
+  |  \      |
+  |   \     |
+  |    \    |
+  |     \   |
+h |      \  |
+  |       \ |
+  |        \|
+  |       _-*
+  |   w _-  |
+  |   _-    |
+  | _- angle|
+  +---------+
+
+    */
+
+    lines nucleotide{
+      create_nucleotide(
+        dy_heart_heart_distance,
+        nucleotide_width,
+        left_chain_angle_rad
+      )
+    };
+    translate(nucleotide, 0.0, dy_heart_heart_distance * (i + 2));
+    append(v, nucleotide);
+  }
+
+  //Add backbone
+  {
+    const double dx{
+      (std::cos(left_chain_angle_rad) * nucleotide_width)
+      + backbone_margin_mm
+    };
+    auto backbone = create_frame(dx, height);
+    translate(backbone, -backbone_margin_mm / 2.0, 0.0);
+    append(v, backbone);
+  }
+  translate(v, 20.0 , 0.0);
+  return v;
+}
 
 std::ostream& operator<<(std::ostream& os, const paper_dna_helix& h) noexcept
 {

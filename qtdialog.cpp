@@ -19,6 +19,7 @@ QtDialog::QtDialog(QWidget *parent) :
   connect(ui->n_nucleotides, SIGNAL(valueChanged(int)), this, SLOT(something_happened()));
   connect(ui->nucleotide_width, SIGNAL(valueChanged(double)), this, SLOT(something_happened()));
   connect(ui->left_chain_angle, SIGNAL(valueChanged(int)), this, SLOT(something_happened()));
+  connect(ui->backbone_margin, SIGNAL(valueChanged(int)), this, SLOT(something_happened()));
 }
 
 QtDialog::~QtDialog()
@@ -33,7 +34,8 @@ void QtDialog::something_happened()
     const paper_dna_helix h(
       static_cast<double>(ui->left_chain_angle->value()) * 6.28 / 360.0,
       ui->n_nucleotides->value(),
-      ui->nucleotide_width->value()
+      ui->nucleotide_width->value(),
+      ui->backbone_margin->value()
     );
     std::stringstream s;
     s << h;

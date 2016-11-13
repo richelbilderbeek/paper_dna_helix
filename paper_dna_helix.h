@@ -12,7 +12,8 @@ public:
   paper_dna_helix(
     const double left_chain_angle_rad,
     const int n_nucleotides,
-    const double nucleotide_width
+    const double nucleotide_width,
+    const double backbone_margin_mm
   );
 
   //Height in A4 (portrait) pixels,
@@ -21,6 +22,9 @@ public:
   double get_width() const noexcept { return 210; }
 
 private:
+
+  ///The horizontal margin of the backbone
+  const double m_backbone_margin_mm;
 
   ///Angle the nucleotides have on the left chain in radians
   const double m_left_chain_angle_rad;
@@ -68,6 +72,14 @@ lines create_nucleotide(
   const double h,
   const double w,
   const double angle
+);
+
+lines create_nucleotides(
+  const int n_nucleotides,
+  const double height,
+  const double nucleotide_width,
+  const double left_chain_angle_rad,
+  const double backbone_margin_mm
 );
 
 
