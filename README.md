@@ -9,3 +9,7 @@
 [![codecov.io](https://codecov.io/github/richelbilderbeek/paper_dna_helix/coverage.svg?branch=master)](https://codecov.io/github/richelbilderbeek/paper_dna_helix?branch=master)
 
 A DNA helix than can be built from paper.
+
+# Sources
+
+Awesome nucleotides by Madeleine Price Ball, from https://en.wikipedia.org/wiki/Nucleobase#/media/File:DNA_chemical_structure.svg
